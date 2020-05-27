@@ -5,6 +5,7 @@ import com.corrientazo.domicilios.data.InformDAO;
 import com.corrientazo.domicilios.model.*;
 import com.corrientazo.domicilios.processor.DeliveryProcessor;
 import com.corrientazo.domicilios.processor.DeliveryProcessorFactory;
+import org.apache.logging.log4j.core.util.ExecutorServices;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -12,6 +13,9 @@ import org.mockito.Mockito;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -32,6 +36,7 @@ class DeliveryServiceImplTest {
 
     @Test
     void processDeliveriesTest() {
+        // TODO This test needs rework because sometimes if fails
         List<Drone> drones = Collections.singletonList(
                 new Drone("01", Orientation.SOUTH, new Coordinates(2, 4))
         );
@@ -44,7 +49,7 @@ class DeliveryServiceImplTest {
         when(deliveryProcessorFactory.create(any(), any())).thenReturn(deliveryProcessor);
         when(deliveryDAO.getDeliveriesByDroneId(any())).thenReturn(deliveries);
 
-        deliveryServiceImpl = new DeliveryServiceImpl(deliveryProcessorFactory, deliveryDAO, informDAO, drones);
+        deliveryServiceImpl = new DeliveryServiceImpl(deliveryProcessorFactory, deliveryDAO, informDAO, drones, Executors.newSingleThreadExecutor());
         deliveryServiceImpl.processDeliveries();
 
         verify(deliveryProcessorFactory).create(any(), any());

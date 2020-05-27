@@ -35,7 +35,8 @@ public class Main {
 
         List<Drone> drones = initializeDrones(NUMBER_OF_DRONES);
 
-        ExecutorService executor = Executors.newSingleThreadExecutor();
+        int processors = Runtime.getRuntime().availableProcessors();
+        ExecutorService executor = Executors.newFixedThreadPool(processors);
 
         DeliveryProcessorFactory deliveryProcessorFactory = new DeliveryProcessorFactoryImpl();
         DeliveryService deliveryService = new DeliveryServiceImpl(deliveryProcessorFactory, deliveryDAO, informDAO, drones, executor);

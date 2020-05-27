@@ -46,6 +46,8 @@ public class DeliveryServiceImpl implements DeliveryService {
                 logger.error("Error processing deliveries for Drone: " + drone.toString(), e);
             }
         }
+
+        executor.shutdown();
     }
 
     private final DeliveryObserver deliveryObserver = new DeliveryObserver() {
