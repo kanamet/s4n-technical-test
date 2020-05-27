@@ -15,6 +15,8 @@ import com.corrientazo.domicilios.service.DeliveryServiceImpl;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
 
@@ -22,7 +24,7 @@ public class Main {
     private static final String INPUT_DIRECTORY = "inputs";
     private static final String OUTPUT_DIRECTORY = "outputs";
 
-    private void executeApplication(){
+    private void executeApplication() {
         MockUtils.cleanOutputFolder();
 /*
         MockUtils.populateFiles(NUMBER_OF_DRONES);
@@ -33,12 +35,14 @@ public class Main {
 
         List<Drone> drones = initializeDrones(NUMBER_OF_DRONES);
 
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
         DeliveryProcessorFactory deliveryProcessorFactory = new DeliveryProcessorFactoryImpl();
-        DeliveryService deliveryService = new DeliveryServiceImpl(deliveryProcessorFactory, deliveryDAO, informDAO, drones);
+        DeliveryService deliveryService = new DeliveryServiceImpl(deliveryProcessorFactory, deliveryDAO, informDAO, drones, executor);
         deliveryService.processDeliveries();
     }
 
-    private List<Drone> initializeDrones(int numberOfDrones){
+    private List<Drone> initializeDrones(int numberOfDrones) {
         List<Drone> drones = new ArrayList<>();
         for (int i = 1; i <= numberOfDrones; i++) {
             String id = String.format("%02d", i);
